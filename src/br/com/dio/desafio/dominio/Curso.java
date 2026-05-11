@@ -1,5 +1,7 @@
 package br.com.dio.desafio.dominio;
 
+import java.util.Objects;
+
 public class Curso {
 
     private String titulo;
@@ -43,5 +45,17 @@ public class Curso {
                 ", descricao='" + descricao + '\'' +
                 ", cargaHoraria=" + cargaHoraria +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Curso curso = (Curso) o;
+        return cargaHoraria == curso.cargaHoraria && Objects.equals(titulo, curso.titulo) && Objects.equals(descricao, curso.descricao);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(titulo, descricao, cargaHoraria);
     }
 }
