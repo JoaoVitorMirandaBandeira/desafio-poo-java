@@ -3,12 +3,35 @@ package br.com.dio.desafio.dominio;
 import javax.swing.plaf.synth.ColorType;
 import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 public class Dev {
     private String nome;
     private Set<Conteudo> conteudosInscrito = new LinkedHashSet<>();
     private Set<Conteudo> conteudosConcluidos = new LinkedHashSet<>();
+
+    public void inscreverBootcamp(Bootcamp bootcamp) {
+        this.conteudosInscrito.addAll(bootcamp.getConteudos());
+        bootcamp.getDevsInscritos().add(this);
+    }
+
+    public void progredir() {
+        Optional<Conteudo> conteudo = this.conteudosInscrito.stream().findFirst();
+        if (conteudo.isPresent()) {
+            this.conteudosInscrito.remove(conteudo.get());
+            this.conteudosConcluidos.add(conteudo.get());
+            return;
+        }
+        System.err.println("Você não está inscrito em nenhum bootcamp");
+    }
+
+    public double calcularTotalXp() {
+        return this.conteudosConcluidos
+                .stream()
+                .mapToDouble(Conteudo::calcularXp)
+                .sum();
+    }
 
     public String getNome() {
         return nome;
@@ -44,5 +67,14 @@ public class Dev {
     @Override
     public int hashCode() {
         return Objects.hash(nome, conteudosInscrito, conteudosConcluidos);
+    }
+
+    @Override
+    public String toString() {
+        return "Dev{" +
+                "nome='" + nome + '\'' +
+                ", conteudosInscrito=" + conteudosInscrito +
+                ", conteudosConcluidos=" + conteudosConcluidos +
+                '}';
     }
 }
